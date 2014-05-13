@@ -23,6 +23,7 @@ fn main() {
         for device in platform.get_devices().iter() {
             println!("Testing device {}", device.name());
             test_device(device);
+            println!("");
         }
     }
 }
