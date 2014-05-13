@@ -1,3 +1,9 @@
+#![crate_id = "opencl-stress"]
+#![crate_type = "bin"]
+
+#![feature(phase)]
+#[phase(syntax, link)] extern crate log;
+
 extern crate OpenCL;
 extern crate std;
 
@@ -9,7 +15,11 @@ use std::io::File;
 
 fn main() {
     for platform in get_platforms().iter() {
-        println!("Using platform {}", platform.name());
+        println!("");
+        println!("================================================================================");
+        println!("    Using platform {}", platform.name());
+        println!("================================================================================");
+        println!("");
         for device in platform.get_devices().iter() {
             println!("Testing device {}", device.name());
             test_device(device);
@@ -21,7 +31,7 @@ fn test_device(dev: &Device) {
     for p in fs::walk_dir(&Path::new("kernels")).unwrap() {
         match p.extension_str() {
             Some("cl") => {
-                println!("Building {}", p.display());
+                println!("    Building {}", p.display());
 
                 let source = File::open(&p).read_to_str().unwrap();
                 let context = dev.create_context();
@@ -31,7 +41,7 @@ fn test_device(dev: &Device) {
                     Err(e) => println!("Error building program: {}", e)
                 }
             },
-            _ => println!("Skipping {}", p.display())
+            _ => info!("Skipping {}", p.display())
         }
     }
 }
