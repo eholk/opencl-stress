@@ -7,9 +7,6 @@
   breaks.
 */
 
-#ifndef GPU_COMMON_H
-#define GPU_COMMON_H
-
 typedef unsigned int region_ptr;
 
 // We use our own bool type because OpenCL doesn't let you pass bools
@@ -31,18 +28,6 @@ struct region_ {
 };
 
 #define region struct region_
-
-// Extract the tag from an ADT
-#define extract_tag(x) ((x).tag)
-
-
-#define harlan_sqrt(x) (sqrt(((float)(x))))
-
-#endif
-// the #if silences warnings on newer OpenCLs.
-#if __OPENCL_VERSION__ < 120
-#pragma OPENCL EXTENSION cl_khr_fp64: enable
-#endif
 
 // This gives us a pointer to something in a region.
 #define get_region_ptr(r, i) (((char __global *)r) + i)
@@ -80,80 +65,6 @@ region_ptr alloc_vector(region __global *r, int item_size, int num_items)
     return p;
 }
 
-// 2 means allocation failure
-// FIXME: with the new small danger vectors, this doesn't actually
-// report allocation failures...
-#define harlan_error(code) { /**danger = 2*/; /* return */; }
-
-typedef int cl_int;
-
-// This is the kernel that is used by the CPU to allocate vectors in
-// regions already on the GPU... or it will be soon, anyway.
-__kernel void harlan_rt_alloc_vector(void __global *r,
-                                     int item_size,
-                                     int num_items,
-                                     region_ptr __global *result)
-{
-    *result = alloc_vector((region __global *)r, item_size, num_items);
-}
-
-__kernel void kernel_863(region_ptr kern_804, __global void * r_305_864) {
-    __global region * r_305 = ((__global region *)(r_305_864));
-    {
-        __global int * retval_808 = (&(((__global int *)(get_region_ptr(r_305, (kern_804) + (8))))[get_global_id(0)]));
-        *retval_808 = get_global_id(0);
-    }
-}
-__kernel void kernel_860(region_ptr kern_796, int stride_21_167, region_ptr x_22_168, __global void * rk_324_862, __global void * rv_256_861) {
-    __global region * rk_324 = ((__global region *)(rk_324_862));
-    __global region * rv_256 = ((__global region *)(rv_256_861));
-    {
-        __global int * retval_800 = (&(((__global int *)(get_region_ptr(rk_324, (kern_796) + (8))))[get_global_id(0)]));
-        int i_28_169 = get_global_id(0);
-        int tmp_29_170 = ((__global int *)(get_region_ptr(rv_256, (x_22_168) + (8))))[i_28_169];
-        int j_32_173 = (i_28_169) + (stride_21_167);
-        int stepv_31_172 = stride_21_167;
-        int stopv_30_171 = *((__global int *)(get_region_ptr(rv_256, x_22_168)));
-        while((j_32_173) < (stopv_30_171))
-            {
-                tmp_29_170 = (tmp_29_170) + (((__global int *)(get_region_ptr(rv_256, (x_22_168) + (8))))[j_32_173]);
-                j_32_173 = (j_32_173) + (stepv_31_172);
-            }
-        *retval_800 = tmp_29_170;
-    }
-}
-__kernel void kernel_858(region_ptr kern_788, __global void * r_389_859) {
-    __global region * r_389 = ((__global region *)(r_389_859));
-    {
-        __global int * retval_792 = (&(((__global int *)(get_region_ptr(r_389, (kern_788) + (8))))[get_global_id(0)]));
-        *retval_792 = get_global_id(0);
-    }
-}
-__kernel void kernel_855(region_ptr kern_780, int stride_44_190, region_ptr x_45_191, __global void * rk_408_857, __global void * rv_256_856) {
-    __global region * rk_408 = ((__global region *)(rk_408_857));
-    __global region * rv_256 = ((__global region *)(rv_256_856));
-    {
-        __global int * retval_784 = (&(((__global int *)(get_region_ptr(rk_408, (kern_780) + (8))))[get_global_id(0)]));
-        int i_51_192 = get_global_id(0);
-        int tmp_52_193 = ((__global int *)(get_region_ptr(rv_256, (x_45_191) + (8))))[i_51_192];
-        int j_55_196 = (i_51_192) + (stride_44_190);
-        int stepv_54_195 = stride_44_190;
-        int stopv_53_194 = *((__global int *)(get_region_ptr(rv_256, x_45_191)));
-        while((j_55_196) < (stopv_53_194))
-            {
-                tmp_52_193 = (tmp_52_193) + (((__global int *)(get_region_ptr(rv_256, (x_45_191) + (8))))[j_55_196]);
-                j_55_196 = (j_55_196) + (stepv_54_195);
-            }
-        *retval_784 = tmp_52_193;
-    }
-}
-__kernel void kernel_853(region_ptr kern_772, __global void * r_436_854) {
-    __global region * r_436 = ((__global region *)(r_436_854));
-    {
-        __global int * retval_776 = (&(((__global int *)(get_region_ptr(r_436, (kern_772) + (8))))[get_global_id(0)]));
-        *retval_776 = get_global_id(0);
-    }
-}
 __kernel void kernel_845(region_ptr kern_764, region_ptr row_62_116, int stride_17_114, region_ptr danger_vector_767, __global void * rk_491_852, __global void * r_472_851, __global void * rk_574_850, __global void * r_555_849, __global void * rv_226_848, __global void * rv_256_847, __global void * rk_597_846) {
     __global region * rk_491 = ((__global region *)(rk_491_852));
     __global region * r_472 = ((__global region *)(r_472_851));
