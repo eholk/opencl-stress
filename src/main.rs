@@ -38,7 +38,11 @@ fn test_device(dev: &Device) {
                 let context = dev.create_context();
                 let program = context.create_program_from_source(source);
                 match program.build(dev) {
-                    Ok(()) => (),
+                    Ok(log) => {
+                        if log.len() > 0 {
+                            println!("{}", log)
+                        }
+                    },
                     Err(e) => println!("Error building program: {}", e)
                 }
             },
