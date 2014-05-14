@@ -27,18 +27,14 @@ __kernel void kernel_845(region_ptr kern_764,
 	int stop = *((__global int *)(get_region_ptr(r, row_62_116)));
 	while(j < stop) {
 		region_ptr x_89_143
-			= ((__global region_ptr *)(get_region_ptr(r,
-													  row_62_116 + 8)))[j];
-		if((*((__global int *)(get_region_ptr(r, x_89_143)))) < (stride)) {
+			= ((__global region_ptr *)(get_region_ptr(r, row_62_116 + 8)))[j];
+		if((*((__global int *)(get_region_ptr(r, x_89_143)))) < stride) {
 			if(0 >= (*((__global int *)(get_region_ptr(r, x_89_143)))))
 				return;
 		}
 		else {
-			region_ptr old_alloc = r->alloc_ptr;
-			r->alloc_ptr += 8 + sizeof(int) * stride;
-			
 			if(!r->alloc_ptr) {
-				r->alloc_ptr = old_alloc;
+				r->alloc_ptr = 0;
 			}
 			region_ptr x_755 = r->alloc_ptr;
 			__global int *vec
