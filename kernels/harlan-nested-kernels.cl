@@ -23,13 +23,13 @@ region_ptr alloc_vector(region __global *r, int item_size, int num_items);
 region_ptr alloc_vector(region __global *r, int item_size, int num_items)
 {
     region_ptr old_alloc = r->alloc_ptr;
-	region_ptr p = (region_ptr)atomic_add(&(r->alloc_ptr),
-										  8 + item_size * num_items);
-    if(!p) {
+	r->alloc_ptr += 8 + item_size * num_items;
+
+    if(!r->alloc_ptr) {
         r->alloc_ptr = old_alloc;
         return 0;
     }
-    return p;
+    return r->alloc_ptr;
 }
 
 __kernel void kernel_845(region_ptr kern_764,
@@ -51,6 +51,7 @@ __kernel void kernel_845(region_ptr kern_764,
 			region_ptr x_755 = alloc_vector(r_555, sizeof(int), stride);
 			__global int *vec
 				= (__global int *)(get_region_ptr(r_555, x_755 + 8));
+
 			for(int k = 0; k < stride; k++)
 				vec[k] = k;
 		}
