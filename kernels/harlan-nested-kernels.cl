@@ -79,8 +79,6 @@ __kernel void kernel_845(region_ptr kern_764, region_ptr row_62_116, int stride_
         region_ptr row_64_118 = ((__global region_ptr *)(get_region_ptr(rv_226, (row_62_116) + (8))))[i_63_117];
         region_ptr x_66_120 = row_64_118;
         int stride_65_119 = 65536;
-        int if_res_819;
-        int t_83_137 = if_res_819;
         int reduce$dindex_86_140 = (i_63_117) + (stride_17_114);
         int stepv_85_139 = stride_17_114;
         int stopv_84_138 = *((__global int *)(get_region_ptr(rv_226, row_62_116)));
@@ -92,18 +90,10 @@ __kernel void kernel_845(region_ptr kern_764, region_ptr row_62_116, int stride_
                 int if_res_820;
                 if((*((__global int *)(get_region_ptr(rv_256, x_89_143)))) < (stride_88_142))
                     {
-                        region_ptr x_90_155 = x_89_143;
-                        region_ptr vec_704 = x_90_155;
-                        int refindex_705 = 0;
-                        if((refindex_705) >= (*((__global int *)(get_region_ptr(rv_256, vec_704)))))
+                        if(0 >= (*((__global int *)(get_region_ptr(rv_256, x_89_143)))))
                             {
-                                ((__global bool_t *)(get_region_ptr(rk_597, (danger_vector_767) + (8))))[0] = true;
                                 return;
                             }
-                        int t_91_156 = ((__global int *)(get_region_ptr(rv_256, (vec_704) + (8))))[refindex_705];
-                        int i_94_159 = 1;
-                        int stepv_93_158 = 1;
-                        int stopv_92_157 = *((__global int *)(get_region_ptr(rv_256, x_90_155)));
                     }
                 else
                     {
@@ -124,9 +114,7 @@ __kernel void kernel_845(region_ptr kern_764, region_ptr row_62_116, int stride_
                         int stepv_104_153 = 1;
                         int stopv_103_152 = *((__global int *)(get_region_ptr(rk_574, x_101_150)));
                     }
-                t_83_137 = (t_83_137) + (if_res_820);
                 reduce$dindex_86_140 = (reduce$dindex_86_140) + (stepv_85_139);
             }
-        *retval_768 = t_83_137;
     }
 }
