@@ -46,40 +46,32 @@ region_ptr alloc_vector(region __global *r, int item_size, int num_items)
 __kernel void kernel_845(region_ptr kern_764,
 						 region_ptr row_62_116,
 						 int stride_17_114,
-						 __global void * r_555_849,
-						 __global void * rv_226_848,
-						 __global void * rv_256_847,
-						 __global void * rk_597_846)
+						 __global region * r_555)
 {
-    __global region * r_555 = ((__global region *)(r_555_849));
-    __global region * rv_226 = ((__global region *)(rv_226_848));
-    __global region * rv_256 = ((__global region *)(rv_256_847));
-    __global region * rk_597 = ((__global region *)(rk_597_846));
-
-	int i_63_117 = get_global_id(0);
-	region_ptr row_64_118 = ((__global region_ptr *)(get_region_ptr(rv_226, (row_62_116) + (8))))[i_63_117];
-	int reduce$dindex_86_140 = (i_63_117) + (stride_17_114);
-	int stopv_84_138 = *((__global int *)(get_region_ptr(rv_226, row_62_116)));
+	int i = get_global_id(0);
+	region_ptr row_64_118
+		= ((__global region_ptr *)(get_region_ptr(r_555, row_62_116 + 8)))[i];
+	int reduce$dindex_86_140 = (i) + (stride_17_114);
+	int stopv_84_138 = *((__global int *)(get_region_ptr(r_555, row_62_116)));
 	int stepv_85_139 = stride_17_114;
-	while((reduce$dindex_86_140) < (stopv_84_138))
-		{
-			region_ptr row_87_141 = ((__global region_ptr *)(get_region_ptr(rv_226, (row_62_116) + (8))))[reduce$dindex_86_140];
-			region_ptr x_89_143 = row_87_141;
-			int stride_88_142 = 65536;
-			if((*((__global int *)(get_region_ptr(rv_256, x_89_143)))) < (stride_88_142))
-				{
-					if(0 >= (*((__global int *)(get_region_ptr(rv_256, x_89_143)))))
-						{
-							return;
-						}
-				}
-			else
-				{
-					region_ptr x_755 = alloc_vector(r_555, sizeof(int), stride_88_142);
-					for(int i_756 = 0; i_756 < stride_88_142; i_756= (i_756 + 1))
-						((__global int *)(get_region_ptr(r_555, (x_755) + (8))))[i_756] = i_756;
-				}
-			reduce$dindex_86_140 = (reduce$dindex_86_140) + (stepv_85_139);
-		}
+	while((reduce$dindex_86_140) < (stopv_84_138)) {
+		region_ptr row_87_141 = ((__global region_ptr *)(get_region_ptr(r_555, (row_62_116) + (8))))[reduce$dindex_86_140];
+		region_ptr x_89_143 = row_87_141;
+		int stride_88_142 = 65536;
+		if((*((__global int *)(get_region_ptr(r_555, x_89_143)))) < (stride_88_142))
+			{
+				if(0 >= (*((__global int *)(get_region_ptr(r_555, x_89_143)))))
+					{
+						return;
+					}
+			}
+		else
+			{
+				region_ptr x_755 = alloc_vector(r_555, sizeof(int), stride_88_142);
+				for(int i_756 = 0; i_756 < stride_88_142; i_756= (i_756 + 1))
+					((__global int *)(get_region_ptr(r_555, (x_755) + (8))))[i_756] = i_756;
+			}
+		reduce$dindex_86_140 = (reduce$dindex_86_140) + (stepv_85_139);
+	}
 
 }
