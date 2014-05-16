@@ -2,7 +2,7 @@
 
 // This is derived again from harlan-nested-kernels.kfc
 
-__kernel void kernel_877()
+__kernel void kernel_877(__global int *p)
 {
     int i = get_global_id(0);
     while(i < get_global_id(0)) {
@@ -21,4 +21,5 @@ __kernel void kernel_877()
         }
         i++;
     }
+	*p = 0;
 }
