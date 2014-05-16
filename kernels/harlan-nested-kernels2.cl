@@ -11,20 +11,6 @@ struct region_ {
 
 #define get_region_ptr(r, i) (((char __global *)r) + i)
 
-typedef unsigned long uint64_t;
-
-region_ptr alloc_vector(region __global *r, int item_size, int num_items)
-{
-    region_ptr p = r->alloc_ptr;
-    r->alloc_ptr += item_size * num_items;
-    if(p > r->size) {
-        // This line is important.
-        r->alloc_ptr = 0;
-        return 0;
-    }
-    return p;
-}
-
 __kernel void kernel_877(region_ptr out,
                          region_ptr row,
                          __global region * r)
@@ -46,7 +32,13 @@ __kernel void kernel_877(region_ptr out,
             else {
                 // This line is also important.
                 region_ptr col2 = col;
-                region_ptr x_787 = alloc_vector(r, sizeof(int), stride);
+
+                r->alloc_ptr += sizeof(int) * stride;
+                if(r->alloc_ptr > r->size) {
+                    r->alloc_ptr = 0;
+                }
+
+                //alloc_vector(r, sizeof(int), stride);
                 for(int j = 0; j < stride; j++) {
                     int x = ((__global int *)(get_region_ptr(r, col2)))[j];
                     int k = j + stride;
