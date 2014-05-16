@@ -56,61 +56,41 @@ region_ptr alloc_vector(region __global *r, int item_size, int num_items)
     return p;
 }
 
-// This is the kernel that is used by the CPU to allocate vectors in
-// regions already on the GPU... or it will be soon, anyway.
-__kernel void harlan_rt_alloc_vector(void __global *r,
-                                     int item_size,
-                                     int num_items,
-                                     region_ptr __global *result)
-{
-    *result = alloc_vector((region __global *)r, item_size, num_items);
-}
-
 __kernel void kernel_877(region_ptr kern_796,
                          region_ptr row_70_132,
-                         int stride_17_130, 
                          region_ptr danger_vector_799,
                          __global region * r)
 {
+    // Inlining this variable makes Intel OpenCL succeed.
     __global int * retval_800 = (&(((__global int *)(get_region_ptr(r, (kern_796) + (8))))[get_global_id(0)]));
-    int i_71_133 = get_global_id(0);
     int if_res_851;
-    int t_95_157 = if_res_851;
-    int reduce$dindex_98_160 = (i_71_133) + (stride_17_130);
-    int stepv_97_159 = stride_17_130;
-    int stopv_96_158 = *((__global int *)(get_region_ptr(r, row_70_132)));
-    while((reduce$dindex_98_160) < (stopv_96_158))
+    int i = get_global_id(0);
+    int stop = *((__global int *)(get_region_ptr(r, row_70_132)));
+    while(i < stop)
         {
-            region_ptr row_99_161 = ((__global region_ptr *)(get_region_ptr(r, (row_70_132) + (8))))[reduce$dindex_98_160];
+            region_ptr row_99_161 = ((__global region_ptr *)(get_region_ptr(r, (row_70_132) + (8))))[i];
             region_ptr x_101_163 = row_99_161;
-            int stride_100_162 = 65536;
+            // if stride is greater than 6, Intel's OpenCL vectorizer crashes.
+            int stride = 7;
             int if_res_852;
-            if((*((__global int *)(get_region_ptr(r, x_101_163)))) < (stride_100_162))
-                {
-                    region_ptr x_102_177 = x_101_163;
-                    region_ptr vec_736 = x_102_177;
-                    int refindex_737 = 0;
-                    // This block seems important. It's probably the return.
-                    if((refindex_737) >= (*((__global int *)(get_region_ptr(r, vec_736))))) {
-                        return;
-                    }
+            if(*((__global int *)(get_region_ptr(r, x_101_163))) < stride) {
+                // This block seems important. It's probably the return.
+                if(0 >= (*((__global int *)(get_region_ptr(r, x_101_163))))) {
+                    return;
                 }
+            }
             else
                 {
                     region_ptr x_109_164 = row_99_161;
-                    int expr_789 = stride_100_162;
-                    region_ptr x_787 = alloc_vector(r, sizeof(int), expr_789);
-                    for(int i_788 = 0; i_788 < expr_789; i_788= (i_788 + 1))
-                        ((__global int *)(get_region_ptr(r, (x_787) + (8))))[i_788] = i_788;
-                    int expr_786 = stride_100_162;
-                    region_ptr x_784 = alloc_vector(r, sizeof(int), expr_786);
-                    for(int i_785 = 0; i_785 < expr_786; i_785= (i_785 + 1))
+                    region_ptr x_787 = alloc_vector(r, sizeof(int), stride);
+                    region_ptr x_784 = 0;
+                    for(int i_785 = 0; i_785 < stride; i_785= (i_785 + 1))
                         {
                             int i_110_165 = i_785;
                             int x_111_166 = ((__global int *)(get_region_ptr(r, (x_109_164) + (8))))[i_110_165];
                             int t_112_167 = x_111_166;
-                            int reduce$dindex_115_170 = (i_110_165) + (stride_100_162);
-                            int stepv_114_169 = stride_100_162;
+                            int reduce$dindex_115_170 = (i_110_165) + (stride);
+                            int stepv_114_169 = stride;
                             int stopv_113_168 = *((__global int *)(get_region_ptr(r, x_109_164)));
                             while((reduce$dindex_115_170) < (stopv_113_168))
                                 {
@@ -121,8 +101,8 @@ __kernel void kernel_877(region_ptr kern_796,
                             ((__global int *)(get_region_ptr(r, (x_784) + (8))))[i_785] = t_112_167;
                         }
                 }
-            t_95_157 = (t_95_157) + (if_res_852);
-            reduce$dindex_98_160 = (reduce$dindex_98_160) + (stepv_97_159);
+            if_res_851 = (if_res_851) + (if_res_852);
+            i++;
         }
-    *retval_800 = t_95_157;
+    *retval_800 = if_res_851;
 }
