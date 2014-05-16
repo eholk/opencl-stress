@@ -13,34 +13,15 @@ struct region_ {
 
 typedef unsigned long uint64_t;
 
-region_ptr alloc_in_region(region __global *r, unsigned int size);
-region_ptr alloc_in_region(region __global *r, unsigned int size)
-{
-    // region_ptr p = r->alloc_ptr;
-    // r->alloc_ptr += size;
-    region_ptr p = ((region_ptr) atomic_add(&(r->alloc_ptr), size));
-    
-    // If this fails, we allocated too much memory and need to resize
-    // the region.
-    if(p + size > r->size) {
-        return 0;
-    }
-
-    return p;
-}
-
-region_ptr alloc_vector(region __global *r, int item_size, int num_items);
 region_ptr alloc_vector(region __global *r, int item_size, int num_items)
 {
-    region_ptr old_alloc = r->alloc_ptr;
-    region_ptr p = alloc_in_region(r, 8 + item_size * num_items);
-    if(!p) {
-        r->alloc_ptr = old_alloc;
+    region_ptr p = r->alloc_ptr;
+    r->alloc_ptr += item_size * num_items;
+    if(p > r->size) {
+        // This line is important.
+        r->alloc_ptr = 0;
         return 0;
     }
-
-    int __global *length_field = (int __global *)get_region_ptr(r, p);
-    *length_field = num_items;
     return p;
 }
 
