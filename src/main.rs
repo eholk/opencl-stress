@@ -14,7 +14,9 @@ use std::io::File;
 
 
 fn main() {
-    for platform in get_platforms().iter() {
+    let mut platforms = get_platforms();
+    platforms.reverse();
+    for platform in platforms.iter() {
         println!("");
         println!("================================================================================");
         println!("    Using platform {}", platform.name());
