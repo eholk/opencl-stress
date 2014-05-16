@@ -21,6 +21,7 @@ fn main() {
         println!("================================================================================");
         println!("    Using platform {}", platform.name());
         println!("================================================================================");
+        println!("    OpenCL Version: {}", platform.version());
         println!("");
         for device in platform.get_devices().iter() {
             println!("Testing device {}", device.name());
