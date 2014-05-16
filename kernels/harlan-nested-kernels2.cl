@@ -57,52 +57,49 @@ region_ptr alloc_vector(region __global *r, int item_size, int num_items)
 }
 
 __kernel void kernel_877(region_ptr kern_796,
-                         region_ptr row_70_132,
-                         region_ptr danger_vector_799,
+                         region_ptr row,
                          __global region * r)
 {
     // Inlining this variable makes Intel OpenCL succeed.
-    __global int * retval_800 = (&(((__global int *)(get_region_ptr(r, (kern_796) + (8))))[get_global_id(0)]));
+    __global int *retval
+        = (&(((__global int *)(get_region_ptr(r, kern_796)))[get_global_id(0)]));
     int if_res_851;
     int i = get_global_id(0);
-    int stop = *((__global int *)(get_region_ptr(r, row_70_132)));
+    int stop = *((__global int *)(get_region_ptr(r, row)));
     while(i < stop)
         {
-            region_ptr row_99_161 = ((__global region_ptr *)(get_region_ptr(r, (row_70_132) + (8))))[i];
-            region_ptr x_101_163 = row_99_161;
+            region_ptr col
+                = ((__global region_ptr *)(get_region_ptr(r, row)))[i];
             // if stride is greater than 6, Intel's OpenCL vectorizer crashes.
             int stride = 7;
             int if_res_852;
-            if(*((__global int *)(get_region_ptr(r, x_101_163))) < stride) {
+            if(*((__global int *)(get_region_ptr(r, col))) < stride) {
                 // This block seems important. It's probably the return.
-                if(0 >= (*((__global int *)(get_region_ptr(r, x_101_163))))) {
+                if(0 >= (*((__global int *)(get_region_ptr(r, col))))) {
                     return;
                 }
             }
             else
                 {
-                    region_ptr x_109_164 = row_99_161;
+                    // This line is also important.
+                    region_ptr col2 = col;
                     region_ptr x_787 = alloc_vector(r, sizeof(int), stride);
                     region_ptr x_784 = 0;
-                    for(int i_785 = 0; i_785 < stride; i_785= (i_785 + 1))
-                        {
-                            int i_110_165 = i_785;
-                            int x_111_166 = ((__global int *)(get_region_ptr(r, (x_109_164) + (8))))[i_110_165];
-                            int t_112_167 = x_111_166;
-                            int reduce$dindex_115_170 = (i_110_165) + (stride);
-                            int stepv_114_169 = stride;
-                            int stopv_113_168 = *((__global int *)(get_region_ptr(r, x_109_164)));
-                            while((reduce$dindex_115_170) < (stopv_113_168))
-                                {
-                                    int x_116_171 = ((__global int *)(get_region_ptr(r, (x_109_164) + (8))))[reduce$dindex_115_170];
-                                    t_112_167 = (t_112_167) + (x_116_171);
-                                    reduce$dindex_115_170 = (reduce$dindex_115_170) + (stepv_114_169);
-                                }
-                            ((__global int *)(get_region_ptr(r, (x_784) + (8))))[i_785] = t_112_167;
+                    for(int j = 0; j < stride; j++) {
+                        int x_111_166 = ((__global int *)(get_region_ptr(r, (col2) + (8))))[j];
+                        int t_112_167 = x_111_166;
+                        int k = j + stride;
+                        int stopv_113_168 = *((__global int *)(get_region_ptr(r, col2)));
+                        while(k < stopv_113_168) {
+                            int x_116_171 = ((__global int *)(get_region_ptr(r, col2)))[k];
+                            t_112_167 = (t_112_167) + (x_116_171);
+                            k += stride;
                         }
+                        ((__global int *)(get_region_ptr(r, (x_784) + (8))))[j] = t_112_167;
+                    }
                 }
-            if_res_851 = (if_res_851) + (if_res_852);
+            if_res_851 += if_res_852;
             i++;
         }
-    *retval_800 = if_res_851;
+    *retval = if_res_851;
 }
