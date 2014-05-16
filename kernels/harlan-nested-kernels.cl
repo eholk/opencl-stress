@@ -7,32 +7,21 @@
   breaks.
 */
 
-#define get_region_ptr(r, i) (r + i)
-
-__kernel void kernel_845(int kern_764,
-						 int row_62_116,
-						 __global int * r)
+__kernel void kernel_845(__global int *r)
 {
-	// This succeeds with smaller strides.
-	int stride = 31;
-	int j = get_global_id(0) + stride;
-	int stop = *r;
-	while(j < stop) {
-		int x_89_143
-			= r[j];
-		if((*((get_region_ptr(r, x_89_143)))) < stride) {
-			if(0 >= (*r))
+	int j = get_global_id(0);
+	while(j < *r) {
+		if(r[j] < 0) {
+			if(0 >= *r)
 				return;
 		}
 		else {
 			if(!*r) {
 				*r = 0;
 			}
-			int x_755 = *r;
-			for(int k = 0; k < stride; k++)
+			for(int k = 0; k < 31; k++)
 				r[k] = k;
 		}
-		j += stride;
+		j++;
 	}
 }
-
