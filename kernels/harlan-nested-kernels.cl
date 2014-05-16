@@ -13,7 +13,8 @@ __kernel void kernel_845(int kern_764,
 						 int row_62_116,
 						 __global int * r)
 {
-	int stride = 65536;
+	// This succeeds with smaller strides.
+	int stride = 31;
 	int j = get_global_id(0) + stride;
 	int stop = *r;
 	while(j < stop) {
