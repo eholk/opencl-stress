@@ -7,38 +7,29 @@
   breaks.
 */
 
-typedef unsigned int region_ptr;
+#define get_region_ptr(r, i) (r + i)
 
-struct region_ {
-    // This is the next thing to allocate
-    volatile region_ptr alloc_ptr;
-};
-
-#define region struct region_
-
-#define get_region_ptr(r, i) (((char __global *)r) + i)
-
-__kernel void kernel_845(region_ptr kern_764,
-						 region_ptr row_62_116,
-						 __global region * r)
+__kernel void kernel_845(int kern_764,
+						 int row_62_116,
+						 __global int * r)
 {
 	int stride = 65536;
 	int j = get_global_id(0) + stride;
-	int stop = *((__global int *)(get_region_ptr(r, row_62_116)));
+	int stop = *((get_region_ptr(r, row_62_116)));
 	while(j < stop) {
-		region_ptr x_89_143
-			= ((__global region_ptr *)(get_region_ptr(r, row_62_116 + 8)))[j];
-		if((*((__global int *)(get_region_ptr(r, x_89_143)))) < stride) {
-			if(0 >= (*((__global int *)(get_region_ptr(r, x_89_143)))))
+		int x_89_143
+			= ((get_region_ptr(r, row_62_116 + 8)))[j];
+		if((*((get_region_ptr(r, x_89_143)))) < stride) {
+			if(0 >= (*((get_region_ptr(r, x_89_143)))))
 				return;
 		}
 		else {
-			if(!r->alloc_ptr) {
-				r->alloc_ptr = 0;
+			if(!*r) {
+				*r = 0;
 			}
-			region_ptr x_755 = r->alloc_ptr;
+			int x_755 = *r;
 			__global int *vec
-				= (__global int *)(get_region_ptr(r, x_755 + 8));
+				= (get_region_ptr(r, x_755 + 8));
 
 			for(int k = 0; k < stride; k++)
 				vec[k] = k;
@@ -46,3 +37,4 @@ __kernel void kernel_845(region_ptr kern_764,
 		j += stride;
 	}
 }
+
