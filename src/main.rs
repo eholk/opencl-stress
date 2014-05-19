@@ -7,49 +7,42 @@
 extern crate OpenCL;
 extern crate std;
 
-use OpenCL::hl::Device;
-use OpenCL::hl::get_platforms;
 use std::io::fs;
 use std::io::File;
+use tester::{TestCase, test_everything};
 
+mod tester;
 
 fn main() {
-    let mut platforms = get_platforms();
-    platforms.reverse();
-    for platform in platforms.iter() {
-        println!("");
-        println!("================================================================================");
-        println!("    Using platform {}", platform.name());
-        println!("================================================================================");
-        println!("    OpenCL Version: {}", platform.version());
-        println!("");
-        for device in platform.get_devices().iter() {
-            println!("Testing device {}", device.name());
-            test_device(device);
-            println!("");
+    let mut tests = FileSystemTests::new(&Path::new("kernels"));
+    test_everything(&mut tests);
+}
+
+struct FileSystemTests {
+    dirs: fs::Directories
+}
+
+impl FileSystemTests {
+    fn new(path: &Path) -> FileSystemTests {
+        FileSystemTests {
+            dirs: fs::walk_dir(path).unwrap()
         }
     }
 }
 
-fn test_device(dev: &Device) {
-    for p in fs::walk_dir(&Path::new("kernels")).unwrap() {
-        match p.extension_str() {
-            Some("cl") => {
-                println!("    Building {}", p.display());
-
-                let source = File::open(&p).read_to_str().unwrap();
-                let context = dev.create_context();
-                let program = context.create_program_from_source(source);
-                match program.build(dev) {
-                    Ok(log) => {
-                        if log.len() > 0 {
-                            println!("{}", log)
-                        }
-                    },
-                    Err(e) => println!("Error building program: {}", e)
-                }
-            },
-            _ => info!("Skipping {}", p.display())
+impl Iterator<TestCase> for FileSystemTests {
+    fn next(&mut self) -> Option<TestCase> {
+        for p in self.dirs {
+            match p.extension_str() {
+                Some("cl") => {
+                    return Some(TestCase {
+                        name: p.display().to_str(),
+                        source: File::open(&p).read_to_str().unwrap()
+                    })
+                },
+                _ => info!("Skipping {}", p.display())
+            }
         }
+        None
     }
 }
