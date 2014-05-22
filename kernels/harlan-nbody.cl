@@ -1,10 +1,4 @@
-/* -*- c++ -*-
-  Code that gets included in both the CPU and GPU code. This is mostly
-  basic data structures.
- */
-
-#ifndef GPU_COMMON_H
-#define GPU_COMMON_H
+/* -*- c -*- */
 
 typedef unsigned int region_ptr;
 
@@ -33,12 +27,6 @@ struct region_ {
 
 
 #define harlan_sqrt(x) (sqrt(((float)(x))))
-
-#endif
-// the #if silences warnings on newer OpenCLs.
-#if __OPENCL_VERSION__ < 120
-#pragma OPENCL EXTENSION cl_khr_fp64: enable
-#endif
 
 // This gives us a pointer to something in a region.
 #define get_region_ptr(r, i) (((char __global *)r) + i)
@@ -82,16 +70,6 @@ region_ptr alloc_vector(region __global *r, int item_size, int num_items)
 #define harlan_error(code) { /**danger = 2*/; /* return */; }
 
 typedef int cl_int;
-
-// This is the kernel that is used by the CPU to allocate vectors in
-// regions already on the GPU... or it will be soon, anyway.
-__kernel void harlan_rt_alloc_vector(void __global *r,
-                                     int item_size,
-                                     int num_items,
-                                     region_ptr __global *result)
-{
-    *result = alloc_vector((region __global *)r, item_size, num_items);
-}
 
 typedef struct {
     cl_int tag;
@@ -175,32 +153,25 @@ point3_t_79 point$ddiv(point3_t_79 a_35_122, float y_34_121) {
 }
 
 float point$dmag(point3_t_79 p_39_117) {
-    {
-        point3_t_79 m_439 = p_39_117;
-        int tag_438 = extract_tag(m_439);
-        float a_42_120 = m_439.data.point3.f0;
-        float b_41_119 = m_439.data.point3.f1;
-        float c_40_118 = m_439.data.point3.f2;
-        return harlan_sqrt(((a_42_120) * (a_42_120)) + (((b_41_119) * (b_41_119)) + ((c_40_118) * (c_40_118))));
-    }
+    point3_t_79 m_439 = p_39_117;
+    int tag_438 = extract_tag(m_439);
+    float a_42_120 = m_439.data.point3.f0;
+    float b_41_119 = m_439.data.point3.f1;
+    float c_40_118 = m_439.data.point3.f2;
+    return harlan_sqrt(((a_42_120) * (a_42_120)) + (((b_41_119) * (b_41_119)) + ((c_40_118) * (c_40_118))));
 }
 
-__kernel void kernel_539(region_ptr kern_506, __global void * r_366_540) {
-    __global region * r_366 = ((__global region *)(r_366_540));
-    {
-        __global int * retval_510 = (&(((__global int *)(get_region_ptr(r_366, (kern_506) + (8))))[get_global_id(0)]));
-        *retval_510 = get_global_id(0);
-    }
-}
-__kernel void kernel_537(region_ptr kern_498, __global void * rk_375_538) {
-    __global region * rk_375 = ((__global region *)(rk_375_538));
-    {
-        __global point3_t_79 * retval_502 = (&(((__global point3_t_79 *)(get_region_ptr(rk_375, (kern_498) + (8))))[get_global_id(0)]));
-        int i_17_143 = get_global_id(0);
-        *retval_502 = point3(int$d$vfloat(i_17_143), int$d$vfloat(i_17_143), int$d$vfloat(i_17_143));
-    }
-}
-__kernel void kernel_532(region_ptr kern_490, region_ptr ktemp_467, region_ptr bodies_43_85, region_ptr danger_vector_493, int stride_45_87, region_ptr j_46_88, __global void * rk_299_536, __global void * r_245_535, __global void * rk_321_534, __global void * rk_375_533) {
+__kernel void kernel_532(region_ptr kern_490,
+                         region_ptr ktemp_467,
+                         region_ptr bodies_43_85,
+                         region_ptr danger_vector_493,
+                         int stride_45_87,
+                         region_ptr j_46_88,
+                         __global void * rk_299_536,
+                         __global void * r_245_535,
+                         __global void * rk_321_534,
+                         __global void * rk_375_533)
+{
     __global region * rk_299 = ((__global region *)(rk_299_536));
     __global region * r_245 = ((__global region *)(r_245_535));
     __global region * rk_321 = ((__global region *)(rk_321_534));
