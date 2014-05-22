@@ -1,9 +1,7 @@
 /* -*- c -*- */
 
-typedef unsigned int region_ptr;
-
 // This gives us a pointer to something in a region.
-#define get_region_ptr(r, i) (((char __global *)r) + i)
+#define get_region_ptr(r, i) (r + i)
 
 typedef struct {
     int tag;
@@ -37,10 +35,10 @@ point3_t_79 point$ddiff(point3_t_79 x_19_135, point3_t_79 y_18_134) {
     return point3((a_22_138) - (d_25_141), (b_21_137) - (e_24_140), (c_20_136) - (f_23_139));
 }
 
-__kernel void kernel_532(region_ptr kern_490,
-                         region_ptr ktemp_467,
-                         region_ptr bodies_43_85,
-                         region_ptr j_46_88,
+__kernel void kernel_532(unsigned int kern_490,
+                         unsigned int ktemp_467,
+                         unsigned int bodies_43_85,
+                         unsigned int j_46_88,
                          int stride_45_87,
                          __global char * r)
 {
