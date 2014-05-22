@@ -42,8 +42,6 @@ typedef struct {
 } data;
 } point3_t_79 ;
 
-float int$d$vfloat(int i_3_156);
-
 point3_t_79 point3(float point3_456, float point3_455, float point3_454);
 
 point3_t_79 point$ddiff(point3_t_79 x_19_135, point3_t_79 y_18_134);
@@ -51,10 +49,6 @@ point3_t_79 point$ddiff(point3_t_79 x_19_135, point3_t_79 y_18_134);
 point3_t_79 point$ddiv(point3_t_79 a_35_122, float y_34_121);
 
 float point$dmag(point3_t_79 p_39_117);
-
-float int$d$vfloat(int i_3_156) {
-    return ((float)(i_3_156));
-}
 
 point3_t_79 point3(float point3_456, float point3_455, float point3_454) {
     {
