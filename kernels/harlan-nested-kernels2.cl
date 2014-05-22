@@ -2,7 +2,7 @@
 __kernel void kernel_877(__global int *p)
 {
     int i = get_global_id(0);
-    while(i < get_global_id(0)) {
+    while(i < (int)get_global_id(0)) {
         if(i < 2) {
             if(i < 1) {
                 return;
