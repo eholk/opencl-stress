@@ -88,8 +88,6 @@ point3_t_79 point3(float point3_456, float point3_455, float point3_454);
 
 point3_t_79 point$ddiff(point3_t_79 x_19_135, point3_t_79 y_18_134);
 
-point3_t_79 point$dadd(point3_t_79 x_27_127, point3_t_79 y_26_126);
-
 point3_t_79 point$ddiv(point3_t_79 a_35_122, float y_34_121);
 
 float point$dmag(point3_t_79 p_39_117);
@@ -113,11 +111,9 @@ point3_t_79 point$ddiff(point3_t_79 x_19_135, point3_t_79 y_18_134) {
     {
         point3_t_79 m_449 = x_19_135;
         point3_t_79 m_447 = y_18_134;
-        int tag_448 = extract_tag(m_449);
         float a_22_138 = m_449.data.point3.f0;
         float b_21_137 = m_449.data.point3.f1;
         float c_20_136 = m_449.data.point3.f2;
-        int tag_446 = extract_tag(m_447);
         float d_25_141 = m_447.data.point3.f0;
         float e_24_140 = m_447.data.point3.f1;
         float f_23_139 = m_447.data.point3.f2;
@@ -125,26 +121,9 @@ point3_t_79 point$ddiff(point3_t_79 x_19_135, point3_t_79 y_18_134) {
     }
 }
 
-point3_t_79 point$dadd(point3_t_79 x_27_127, point3_t_79 y_26_126) {
-    {
-        point3_t_79 m_445 = x_27_127;
-        point3_t_79 m_443 = y_26_126;
-        int tag_444 = extract_tag(m_445);
-        float a_30_130 = m_445.data.point3.f0;
-        float b_29_129 = m_445.data.point3.f1;
-        float c_28_128 = m_445.data.point3.f2;
-        int tag_442 = extract_tag(m_443);
-        float x_33_133 = m_443.data.point3.f0;
-        float y_32_132 = m_443.data.point3.f1;
-        float z_31_131 = m_443.data.point3.f2;
-        return point3((a_30_130) + (x_33_133), (b_29_129) + (y_32_132), (c_28_128) + (z_31_131));
-    }
-}
-
 point3_t_79 point$ddiv(point3_t_79 a_35_122, float y_34_121) {
     {
         point3_t_79 m_441 = a_35_122;
-        int tag_440 = extract_tag(m_441);
         float a_38_125 = m_441.data.point3.f0;
         float b_37_124 = m_441.data.point3.f1;
         float c_36_123 = m_441.data.point3.f2;
@@ -154,7 +133,6 @@ point3_t_79 point$ddiv(point3_t_79 a_35_122, float y_34_121) {
 
 float point$dmag(point3_t_79 p_39_117) {
     point3_t_79 m_439 = p_39_117;
-    int tag_438 = extract_tag(m_439);
     float a_42_120 = m_439.data.point3.f0;
     float b_41_119 = m_439.data.point3.f1;
     float c_40_118 = m_439.data.point3.f2;
@@ -180,58 +158,13 @@ __kernel void kernel_532(region_ptr kern_490,
         __global point3_t_79 * retval_494 = (&(((__global point3_t_79 *)(get_region_ptr(rk_321, (kern_490) + (8))))[get_global_id(0)]));
         __global point3_t_79 * i_44_86 = (&(((__global point3_t_79 *)(get_region_ptr(rk_375, (ktemp_467) + (8))))[get_global_id(0)]));
         point3_t_79 if_res_514;
-        if((*((__global int *)(get_region_ptr(rk_375, j_46_88)))) < (stride_45_87))
-            {
-                region_ptr j_47_106 = j_46_88;
-                region_ptr vec_478 = j_47_106;
-                int refindex_479 = 0;
-                if((refindex_479) >= (*((__global int *)(get_region_ptr(rk_375, vec_478)))))
-                    {
-                        ((__global bool_t *)(get_region_ptr(rk_321, (danger_vector_493) + (8))))[0] = true;
-                        return;
-                    }
-                point3_t_79 j_48_107 = ((__global point3_t_79 *)(get_region_ptr(rk_375, (vec_478) + (8))))[refindex_479];
-                point3_t_79 diff_49_108 = point$ddiff(*i_44_86, j_48_107);
-                float d_50_109 = point$dmag(diff_49_108);
-                point3_t_79 if_res_515;
-                if((0) < (d_50_109))
-                    if_res_515 = point$ddiv(diff_49_108, ((d_50_109) * (d_50_109)) * (d_50_109));
-                else
-                    if_res_515 = point3(0, 0, 0);
-                point3_t_79 t_51_110 = if_res_515;
-                int i_54_113 = 1;
-                int stepv_53_112 = 1;
-                int stopv_52_111 = *((__global int *)(get_region_ptr(rk_375, j_47_106)));
-                while((i_54_113) < (stopv_52_111))
-                    {
-                        region_ptr vec_475 = j_47_106;
-                        int refindex_476 = i_54_113;
-                        if((refindex_476) >= (*((__global int *)(get_region_ptr(rk_375, vec_475)))))
-                            {
-                                ((__global bool_t *)(get_region_ptr(rk_321, (danger_vector_493) + (8))))[0] = true;
-                                return;
-                            }
-                        point3_t_79 j_55_114 = ((__global point3_t_79 *)(get_region_ptr(rk_375, (vec_475) + (8))))[refindex_476];
-                        point3_t_79 diff_56_115 = point$ddiff(*i_44_86, j_55_114);
-                        float d_57_116 = point$dmag(diff_56_115);
-                        point3_t_79 if_res_516;
-                        if((0) < (d_57_116))
-                            if_res_516 = point$ddiv(diff_56_115, ((d_57_116) * (d_57_116)) * (d_57_116));
-                        else
-                            if_res_516 = point3(0, 0, 0);
-                        t_51_110 = point$dadd(t_51_110, if_res_516);
-                        i_54_113 = (i_54_113) + (stepv_53_112);
-                    }
-                if_res_514 = t_51_110;
-            }
-        else
+        if((*((__global int *)(get_region_ptr(rk_375, j_46_88)))) >= (stride_45_87))
             {
                 region_ptr j_58_89 = bodies_43_85;
                 int expr_489 = stride_45_87;
                 region_ptr x_487 = alloc_vector(r_245, sizeof(int), expr_489);
                 for(int i_488 = 0; i_488 < expr_489; i_488= (i_488 + 1))
                     ((__global int *)(get_region_ptr(r_245, (x_487) + (8))))[i_488] = i_488;
-                region_ptr ktemp_466 = x_487;
                 int expr_486 = stride_45_87;
                 region_ptr x_484 = alloc_vector(rk_299, sizeof(point3_t_79), expr_486);
                 for(int i_485 = 0; i_485 < expr_486; i_485= (i_485 + 1))
@@ -246,51 +179,14 @@ __kernel void kernel_532(region_ptr kern_490,
                         else
                             if_res_517 = point3(0, 0, 0);
                         point3_t_79 t_63_94 = if_res_517;
-                        int reduce$dindex_66_97 = (i_59_90) + (stride_45_87);
-                        int stepv_65_96 = stride_45_87;
-                        int stopv_64_95 = *((__global int *)(get_region_ptr(rk_375, j_58_89)));
-                        while((reduce$dindex_66_97) < (stopv_64_95))
-                            {
-                                point3_t_79 j_67_98 = ((__global point3_t_79 *)(get_region_ptr(rk_375, (j_58_89) + (8))))[reduce$dindex_66_97];
-                                point3_t_79 diff_68_99 = point$ddiff(*i_44_86, j_67_98);
-                                float d_69_100 = point$dmag(diff_68_99);
-                                point3_t_79 if_res_518;
-                                if((0) < (d_69_100))
-                                    if_res_518 = point$ddiv(diff_68_99, ((d_69_100) * (d_69_100)) * (d_69_100));
-                                else
-                                    if_res_518 = point3(0, 0, 0);
-                                t_63_94 = point$dadd(t_63_94, if_res_518);
-                                reduce$dindex_66_97 = (reduce$dindex_66_97) + (stepv_65_96);
-                            }
                         ((__global point3_t_79 *)(get_region_ptr(rk_299, (x_484) + (8))))[i_485] = t_63_94;
                     }
                 region_ptr x_70_101 = x_484;
                 region_ptr vec_472 = x_70_101;
                 int refindex_473 = 0;
-                if((refindex_473) >= (*((__global int *)(get_region_ptr(rk_299, vec_472)))))
-                    {
-                        ((__global bool_t *)(get_region_ptr(rk_321, (danger_vector_493) + (8))))[0] = true;
-                        return;
-                    }
                 point3_t_79 t_71_102 = ((__global point3_t_79 *)(get_region_ptr(rk_299, (vec_472) + (8))))[refindex_473];
-                int i_74_105 = 1;
-                int stepv_73_104 = 1;
-                int stopv_72_103 = *((__global int *)(get_region_ptr(rk_299, x_70_101)));
-                while((i_74_105) < (stopv_72_103))
-                    {
-                        region_ptr vec_469 = x_70_101;
-                        int refindex_470 = i_74_105;
-                        if((refindex_470) >= (*((__global int *)(get_region_ptr(rk_299, vec_469)))))
-                            {
-                                ((__global bool_t *)(get_region_ptr(rk_321, (danger_vector_493) + (8))))[0] = true;
-                                return;
-                            }
-                        t_71_102 = point$dadd(t_71_102, ((__global point3_t_79 *)(get_region_ptr(rk_299, (vec_469) + (8))))[refindex_470]);
-                        i_74_105 = (i_74_105) + (stepv_73_104);
-                    }
                 if_res_514 = t_71_102;
             }
         *retval_494 = if_res_514;
     }
 }
-
