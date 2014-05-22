@@ -73,14 +73,8 @@ __kernel void kernel_532(region_ptr kern_490,
     __global region * r = ((__global region *)(rk_299_536));
     __global point3_t_79 * retval_494 = (&(((__global point3_t_79 *)(get_region_ptr(r, (kern_490) + (8))))[get_global_id(0)]));
     __global point3_t_79 * i_44_86 = (&(((__global point3_t_79 *)(get_region_ptr(r, (ktemp_467) + (8))))[get_global_id(0)]));
-    point3_t_79 if_res_514;
-    if((*((__global int *)(get_region_ptr(r, j_46_88)))) >= 0) {
-        for(int i_485 = 0; i_485 < stride_45_87; i_485= (i_485 + 1)) {
-            point3_t_79 j_60_91 = ((__global point3_t_79 *)(get_region_ptr(r, (bodies_43_85) + (8))))[i_485];
-            point3_t_79 diff = point$ddiff(*i_44_86, j_60_91);
-            ((__global point3_t_79 *)(get_region_ptr(r, 8)))[i_485] = diff;
-        }
-        if_res_514 = ((__global point3_t_79 *)(get_region_ptr(r, 8)))[0];
-    }
-    *retval_494 = if_res_514;
+    point3_t_79 j_60_91 = ((__global point3_t_79 *)(get_region_ptr(r, (bodies_43_85) + (8))))[0];
+    point3_t_79 diff = point$ddiff(*i_44_86, j_60_91);
+    ((__global point3_t_79 *)(get_region_ptr(r, 8)))[0] = diff;
+    *retval_494 = ((__global point3_t_79 *)(get_region_ptr(r, 8)))[0];
 }
