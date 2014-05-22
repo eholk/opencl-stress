@@ -26,53 +26,13 @@ struct region_ {
 #define extract_tag(x) ((x).tag)
 
 
-#define harlan_sqrt(x) (sqrt(((float)(x))))
-
 // This gives us a pointer to something in a region.
 #define get_region_ptr(r, i) (((char __global *)r) + i)
 
 typedef unsigned long uint64_t;
 
-region_ptr alloc_in_region(region __global *r, unsigned int size);
-region_ptr alloc_in_region(region __global *r, unsigned int size)
-{
-    // region_ptr p = r->alloc_ptr;
-    // r->alloc_ptr += size;
-    region_ptr p = ((region_ptr) atomic_add(&(r->alloc_ptr), size));
-    
-    // If this fails, we allocated too much memory and need to resize
-    // the region.
-    if(p + size > r->size) {
-        return 0;
-    }
-
-    return p;
-}
-
-region_ptr alloc_vector(region __global *r, int item_size, int num_items);
-region_ptr alloc_vector(region __global *r, int item_size, int num_items)
-{
-    region_ptr old_alloc = r->alloc_ptr;
-    region_ptr p = alloc_in_region(r, 8 + item_size * num_items);
-    if(!p) {
-        r->alloc_ptr = old_alloc;
-        return 0;
-    }
-
-    int __global *length_field = (int __global *)get_region_ptr(r, p);
-    *length_field = num_items;
-    return p;
-}
-
-// 2 means allocation failure
-// FIXME: with the new small danger vectors, this doesn't actually
-// report allocation failures...
-#define harlan_error(code) { /**danger = 2*/; /* return */; }
-
-typedef int cl_int;
-
 typedef struct {
-    cl_int tag;
+    int tag;
     union {
     struct {
     float f0;
@@ -136,7 +96,7 @@ float point$dmag(point3_t_79 p_39_117) {
     float a_42_120 = m_439.data.point3.f0;
     float b_41_119 = m_439.data.point3.f1;
     float c_40_118 = m_439.data.point3.f2;
-    return harlan_sqrt(((a_42_120) * (a_42_120)) + (((b_41_119) * (b_41_119)) + ((c_40_118) * (c_40_118))));
+    return sqrt(((a_42_120) * (a_42_120)) + (((b_41_119) * (b_41_119)) + ((c_40_118) * (c_40_118))));
 }
 
 __kernel void kernel_532(region_ptr kern_490,
@@ -162,22 +122,16 @@ __kernel void kernel_532(region_ptr kern_490,
             {
                 region_ptr j_58_89 = bodies_43_85;
                 int expr_489 = stride_45_87;
-                region_ptr x_487 = alloc_vector(r_245, sizeof(int), expr_489);
-                for(int i_488 = 0; i_488 < expr_489; i_488= (i_488 + 1))
-                    ((__global int *)(get_region_ptr(r_245, (x_487) + (8))))[i_488] = i_488;
-                int expr_486 = stride_45_87;
-                region_ptr x_484 = alloc_vector(rk_299, sizeof(point3_t_79), expr_486);
-                for(int i_485 = 0; i_485 < expr_486; i_485= (i_485 + 1))
+                region_ptr x_487 = 0;
+                region_ptr x_484 = 0;
+                for(int i_485 = 0; i_485 < stride_45_87; i_485= (i_485 + 1))
                     {
                         int i_59_90 = i_485;
                         point3_t_79 j_60_91 = ((__global point3_t_79 *)(get_region_ptr(rk_375, (j_58_89) + (8))))[i_59_90];
                         point3_t_79 diff_61_92 = point$ddiff(*i_44_86, j_60_91);
                         float d_62_93 = point$dmag(diff_61_92);
                         point3_t_79 if_res_517;
-                        if((0) < (d_62_93))
-                            if_res_517 = point$ddiv(diff_61_92, ((d_62_93) * (d_62_93)) * (d_62_93));
-                        else
-                            if_res_517 = point3(0, 0, 0);
+                        if_res_517 = point$ddiv(diff_61_92, ((d_62_93) * (d_62_93)) * (d_62_93));
                         point3_t_79 t_63_94 = if_res_517;
                         ((__global point3_t_79 *)(get_region_ptr(rk_299, (x_484) + (8))))[i_485] = t_63_94;
                     }
