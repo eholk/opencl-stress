@@ -7,26 +7,14 @@ typedef struct {
     float f0;
     float f1;
     float f2;
-} point3_t_79 ;
+} point3_t_79;
 
-point3_t_79 point3(float point3_456, float point3_455, float point3_454) {
-    point3_t_79 result_457 = {0};
-    result_457.f0 = point3_456;
-    result_457.f1 = point3_455;
-    result_457.f2 = point3_454;
-    return result_457;
-}
-
-point3_t_79 point$ddiff(point3_t_79 x_19_135, point3_t_79 y_18_134) {
-    point3_t_79 m_449 = x_19_135;
-    point3_t_79 m_447 = y_18_134;
-    float a_22_138 = m_449.f0;
-    float b_21_137 = m_449.f1;
-    float c_20_136 = m_449.f2;
-    float d_25_141 = m_447.f0;
-    float e_24_140 = m_447.f1;
-    float f_23_139 = m_447.f2;
-    return point3((a_22_138) - (d_25_141), (b_21_137) - (e_24_140), (c_20_136) - (f_23_139));
+point3_t_79 point$ddiff(point3_t_79 x, point3_t_79 y) {
+    point3_t_79 result = {0};
+    result.f0 = x.f0 - y.f0;
+    result.f1 = x.f1 - y.f1;
+    result.f2 = x.f2 - y.f2;
+    return result;
 }
 
 __kernel void kernel_532(unsigned int kern_490,
