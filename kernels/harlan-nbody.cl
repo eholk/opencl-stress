@@ -5,20 +5,18 @@
 
 typedef struct {
     int tag;
-    union {
         struct {
             float f0;
             float f1;
             float f2;
         } point3;
-    } data;
 } point3_t_79 ;
 
 point3_t_79 point3(float point3_456, float point3_455, float point3_454) {
     point3_t_79 result_457 = {0};
-    result_457.data.point3.f0 = point3_456;
-    result_457.data.point3.f1 = point3_455;
-    result_457.data.point3.f2 = point3_454;
+    result_457.point3.f0 = point3_456;
+    result_457.point3.f1 = point3_455;
+    result_457.point3.f2 = point3_454;
     result_457.tag = 0;
     return result_457;
 }
@@ -26,12 +24,12 @@ point3_t_79 point3(float point3_456, float point3_455, float point3_454) {
 point3_t_79 point$ddiff(point3_t_79 x_19_135, point3_t_79 y_18_134) {
     point3_t_79 m_449 = x_19_135;
     point3_t_79 m_447 = y_18_134;
-    float a_22_138 = m_449.data.point3.f0;
-    float b_21_137 = m_449.data.point3.f1;
-    float c_20_136 = m_449.data.point3.f2;
-    float d_25_141 = m_447.data.point3.f0;
-    float e_24_140 = m_447.data.point3.f1;
-    float f_23_139 = m_447.data.point3.f2;
+    float a_22_138 = m_449.point3.f0;
+    float b_21_137 = m_449.point3.f1;
+    float c_20_136 = m_449.point3.f2;
+    float d_25_141 = m_447.point3.f0;
+    float e_24_140 = m_447.point3.f1;
+    float f_23_139 = m_447.point3.f2;
     return point3((a_22_138) - (d_25_141), (b_21_137) - (e_24_140), (c_20_136) - (f_23_139));
 }
 
