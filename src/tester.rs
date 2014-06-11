@@ -6,7 +6,7 @@ pub struct TestCase {
     pub source: String,
 }
 
-pub fn test_everything<It: Iterator<TestCase>>(tests: &mut It) {
+pub fn test_everything<It: Clone + Iterator<TestCase>>(tests: &mut It) {
     let mut platforms = get_platforms();
     platforms.reverse();
     for platform in platforms.iter() {
@@ -18,7 +18,7 @@ pub fn test_everything<It: Iterator<TestCase>>(tests: &mut It) {
         println!("");
         for device in platform.get_devices().iter() {
             println!("Testing device {}", device.name());
-            test_device(device, tests);
+            test_device(device, &mut tests.clone());
             println!("");
         }
     }
