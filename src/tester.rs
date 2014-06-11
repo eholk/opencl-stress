@@ -2,8 +2,8 @@ use OpenCL::hl::Device;
 use OpenCL::hl::get_platforms;
 
 pub struct TestCase {
-    pub name: ~str,
-    pub source: ~str,
+    pub name: String,
+    pub source: String,
 }
 
 pub fn test_everything<It: Iterator<TestCase>>(tests: &mut It) {
@@ -29,7 +29,7 @@ fn test_device<It: Iterator<TestCase>>(dev: &Device, tests: &mut It) {
         println!("    Building {}", test.name);
         
         let context = dev.create_context();
-        let program = context.create_program_from_source(test.source);
+        let program = context.create_program_from_source(&test.source);
         match program.build(dev) {
             Ok(log) => {
                 if log.len() > 0 {
