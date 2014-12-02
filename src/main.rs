@@ -2,10 +2,9 @@
 #![crate_type = "bin"]
 
 #![feature(phase)]
-#[phase(syntax, link)] extern crate log;
+#[phase(plugin, link)] extern crate log;
 
-extern crate OpenCL;
-extern crate std;
+extern crate opencl;
 
 use std::io::fs;
 use std::io::File;
@@ -48,8 +47,8 @@ impl<'a> Iterator<TestCase> for FileSystemTests<'a> {
             match p.extension_str() {
                 Some("cl") => {
                     return Some(TestCase {
-                        name: p.display().to_str(),
-                        source: File::open(&p).read_to_str().unwrap()
+                        name: String::from_str(p.display().as_cow().deref()),
+                        source: File::open(&p).read_to_string().unwrap()
                     })
                 },
                 _ => info!("Skipping {}", p.display())

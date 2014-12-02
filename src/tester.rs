@@ -1,5 +1,5 @@
-use OpenCL::hl::Device;
-use OpenCL::hl::get_platforms;
+use opencl::hl::Device;
+use opencl::hl::get_platforms;
 
 pub struct TestCase {
     pub name: String,
@@ -29,7 +29,7 @@ fn test_device<It: Iterator<TestCase>>(dev: &Device, tests: &mut It) {
         println!("    Building {}", test.name);
         
         let context = dev.create_context();
-        let program = context.create_program_from_source(&test.source);
+        let program = context.create_program_from_source(test.source.as_slice());
         match program.build(dev) {
             Ok(log) => {
                 if log.len() > 0 {

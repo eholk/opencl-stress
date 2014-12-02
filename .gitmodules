@@ -1,3 +1,0 @@
-[submodule "external/rust-opencl"]
-	path = external/rust-opencl
-	url = https://github.com/eholk/rust-opencl.git
