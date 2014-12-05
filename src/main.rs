@@ -1,4 +1,3 @@
-#![crate_id = "opencl-stress"]
 #![crate_type = "bin"]
 
 #![feature(phase)]
