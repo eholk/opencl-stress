@@ -1,0 +1,12 @@
+[root]
+name = "opencl-stress"
+version = "0.0.1"
+dependencies = [
+ "opencl 0.2.0 (git+https://github.com/luqmana/rust-opencl.git)",
+]
+
+[[package]]
+name = "opencl"
+version = "0.2.0"
+source = "git+https://github.com/luqmana/rust-opencl.git#b343dd534299214cf3acf1b59c74d12f62c28605"
+
